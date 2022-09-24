@@ -9,9 +9,9 @@ const App: React.FC = () => {
       <Navbar />
       <Welcome />
     </div>
-      <Services />
-      <Transactions />
-      <Footer />
+    <Services />
+    <Transactions />
+    <Footer />
   </div>
   )
 }
