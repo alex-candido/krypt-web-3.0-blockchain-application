@@ -3,31 +3,12 @@ import { AiFillPlayCircle } from "react-icons/ai";
 // import { AiFillPlayCircle } from "react-icons/ai";
 import { BsInfoCircle } from "react-icons/bs";
 import { SiEthereum } from "react-icons/si";
-import shortenAddress from "../utils/shortenAddress";
+import shortenAddress from "../../utils/shortenAddress";
+import GridItem from "./GridItem";
+import Input from "./Input";
+import { inputList } from "./InputList";
 
 const companyCommonStyles = "min-h-[70px] sm:px-0 px-2 sm:min-w-[120px] flex justify-center items-center border-[0.5px] border-gray-400 text-sm font-light text-white";
-
-interface InputProps {
-  placeholder: string;
-  name: string;
-  type: string;
-  value?: string;
-  handleChange: () => void;
-}
-
-const Input = ({ placeholder, name, type, value, handleChange }: InputProps) => {
-  return (
-    <input
-    placeholder={placeholder}
-    type={type}
-    step="0.0001"
-    value={value}
-    onChange={(e) => handleChange()}
-    className="my-2 w-full rounded-sm p-2 outline-none bg-transparent text-white border-none text-sm white-glassmorphism"
-  />
-  )
-}
-
 
 const Welcome: React.FC  = () => {
   function handleChange() {
@@ -60,22 +41,13 @@ const Welcome: React.FC  = () => {
               </p>
             </button>
 
-
           <div className="grid sm:grid-cols-3 grid-cols-2 w-full mt-10">
-            <div className={`rounded-tl-2xl ${companyCommonStyles}`}>
-              Reliability
-            </div>
-            <div className={companyCommonStyles}>Security</div>
-            <div className={`sm:rounded-tr-2xl ${companyCommonStyles}`}>
-              Ethereum
-            </div>
-            <div className={`sm:rounded-bl-2xl ${companyCommonStyles}`}>
-              Web 3.0
-            </div>
-            <div className={companyCommonStyles}>Low Fees</div>
-            <div className={`rounded-br-2xl ${companyCommonStyles}`}>
-              Blockchain
-            </div>
+            <GridItem properties={`rounded-tl-2xl ${companyCommonStyles}`} child="Reliability" />
+            <GridItem properties={companyCommonStyles} child="Security" />
+            <GridItem properties={`sm:rounded-tr-2xl ${companyCommonStyles}`} child="Ethereum" />
+            <GridItem properties={`sm:rounded-bl-2xl ${companyCommonStyles}`} child="Web 3.0" />
+            <GridItem properties={companyCommonStyles} child="Low Fees" />
+            <GridItem properties={`rounded-br-2xl ${companyCommonStyles}`} child="Blockchain" />
           </div>
         </div>
 
@@ -98,15 +70,18 @@ const Welcome: React.FC  = () => {
               </div>
             </div>
           </div>
+
           <div className="p-5 sm:w-96 w-full flex flex-col justify-start items-center blue-glassmorphism">
-            <Input placeholder="Address To" name="addressTo" type="text" handleChange={handleChange} />
-            <Input placeholder="Amount (ETH)" name="amount" type="number" handleChange={handleChange} />
-            <Input placeholder="Keyword (Gif)" name="keyword" type="text" handleChange={handleChange} />
-            <Input placeholder="Enter Message" name="message" type="text" handleChange={handleChange} />
-
+            {inputList.map((input) => (
+              <Input 
+              placeholder={input.placeholder} 
+              name={input.name} type={input.type} 
+              handleChange={handleChange} 
+              />
+            ))}
             <div className="h-[1px] w-full bg-gray-400 my-2" />
-
           </div>
+          
         </div>
       </div>
     </div>
