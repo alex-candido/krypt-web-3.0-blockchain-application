@@ -10,6 +10,7 @@ const Input = ({ placeholder, name, type, value, handleChange }: InputProps) => 
   return (
     <input
     placeholder={placeholder}
+    name= {name}
     type={type}
     step="0.0001"
     value={value}
