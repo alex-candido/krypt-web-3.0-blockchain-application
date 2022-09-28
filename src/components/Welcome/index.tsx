@@ -78,8 +78,9 @@ const Welcome = () => {
           </div>
 
           <div className="p-5 sm:w-96 w-full flex flex-col justify-start items-center blue-glassmorphism">
-            {inputList.map((input) => (
+            {inputList.map((input, index) => (
               <Input 
+              key={index}
               placeholder={input.placeholder} 
               name={input.name} type={input.type} 
               handleChange={handleChange} 
