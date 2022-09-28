@@ -1,7 +1,8 @@
-import React from "react";
+import React, { useContext } from "react";
 import { AiFillPlayCircle } from "react-icons/ai";
 import { BsInfoCircle } from "react-icons/bs";
 import { SiEthereum } from "react-icons/si";
+import { TransactionContext } from "../../context/TransactionContext";
 import shortenAddress from "../../utils/shortenAddress";
 import GridItem from "./GridItem";
 import Input from "./Input";
@@ -11,7 +12,10 @@ import Loader from "./Loader";
 const companyCommonStyles = "min-h-[70px] sm:px-0 px-2 sm:min-w-[120px] flex justify-center items-center border-[0.5px] border-gray-400 text-sm font-light text-white";
 
 const Welcome = () => {
+  const { value }= useContext(TransactionContext);
+
   const [isLoading, setisLoading] = React.useState(false);
+  console.log(value)
 
   function handleSubmit() {
     
