@@ -12,10 +12,9 @@ import Loader from "./Loader";
 const companyCommonStyles = "min-h-[70px] sm:px-0 px-2 sm:min-w-[120px] flex justify-center items-center border-[0.5px] border-gray-400 text-sm font-light text-white";
 
 const Welcome = () => {
-  const { value }= useContext(TransactionContext);
+  const { connectWallet, sendTransaction }= useContext(TransactionContext);
 
   const [isLoading, setisLoading] = React.useState(false);
-  console.log(value)
 
   function handleSubmit() {
     
@@ -23,10 +22,6 @@ const Welcome = () => {
 
   function handleChange() {
 
-  }
-
-  function connectWallet() {
-    
   }
 
   return (
@@ -41,7 +36,7 @@ const Welcome = () => {
           </p>
 
           <button
-            type="button"
+            type="submit"
             onClick={connectWallet}
             className="flex flex-row justify-center items-center my-5 bg-[#2952e3] p-3 rounded-full cursor-pointer hover:bg-[#2546bd]"
           >
@@ -97,8 +92,8 @@ const Welcome = () => {
               ? <Loader />
               : (
                 <button
-                  type="button"
-                  onClick={handleSubmit}
+                  type="submit"
+                  onClick={sendTransaction}
                   className="text-white w-full mt-2 border-[1px] p-2 border-[#3d4f7c] hover:bg-[#3d4f7c] rounded-full cursor-pointer"
                 >
                   Send now
