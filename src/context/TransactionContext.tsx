@@ -3,10 +3,22 @@ import React, { createContext, useEffect, useState } from "react";
 
 import { contractABI, contractAddress } from "../utils/constants";
 
+export interface Transaction {
+  addressTo: string;
+  addressFrom: string;
+  timestamp: string;
+  message: string;
+  keyword?: string;
+  amount: string;
+  url?: string;
+}
+
 interface AuthContextData {
   connectWallet: () => void;
   sendTransaction: () => void;
   handleChange: (e: React.FormEvent<HTMLInputElement>, name: string) => void;
+  currentAccount: string;
+  transactions: Transaction[];
 }
 
 export const TransactionContext = createContext<AuthContextData>( {} as AuthContextData );
@@ -30,13 +42,40 @@ export const TransactionsProvider = ({ children }: ContextProps) => {
   const [currentAccount, setCurrentAccount] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [transactionCount, setTransactionCount] = useState(localStorage.getItem("transactionCount"));
+  const [transactions, setTransactions] = useState([]);
 
   const handleChange = (e, name) => {
     setformData((prevState) => ({ ...prevState, [name]: e.target.value }));
     console.log(formData);
   };
 
+  const getAllTransactions = async () => {
+    try {
+      if (ethereum) {
+        const transactionsContract = createEthereumContract();
 
+        const availableTransactions = await transactionsContract.getAllTransactions();
+
+        const structuredTransactions = availableTransactions.map((transaction) => ({
+          addressTo: transaction.receiver,
+          addressFrom: transaction.sender,
+          timestamp: new Date(transaction.timestamp.toNumber() * 1000).toLocaleString(),
+          message: transaction.message,
+          keyword: transaction.keyword,
+          amount: parseInt(transaction.amount._hex) / (10 ** 18)
+        }));
+
+        console.log(structuredTransactions);
+
+        setTransactions(structuredTransactions);
+      } else {
+        console.log("Ethereum is not present");
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+      
 
   const checkIfWalletIsConnect = async () => {
     try {
@@ -44,7 +83,13 @@ export const TransactionsProvider = ({ children }: ContextProps) => {
 
       const accounts = await ethereum.request({ method: "eth_accounts" });
 
-      console.log(accounts);
+      if (accounts.length) {
+        setCurrentAccount(accounts[0]);
+
+        getAllTransactions();
+      } else {
+        console.log("No accounts found");
+      }
     } catch (error) {
       console.log(error);
     }
@@ -115,6 +160,8 @@ export const TransactionsProvider = ({ children }: ContextProps) => {
         connectWallet,
         sendTransaction,
         handleChange,
+        currentAccount,
+        transactions,
       }}
     >
       {children}
