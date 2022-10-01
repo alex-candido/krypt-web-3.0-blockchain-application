@@ -6,6 +6,7 @@ import { contractABI, contractAddress } from "../utils/constants";
 interface AuthContextData {
   connectWallet: () => void;
   sendTransaction: () => void;
+  handleChange: (e: React.FormEvent<HTMLInputElement>, name: string) => void;
 }
 
 export const TransactionContext = createContext<AuthContextData>( {} as AuthContextData );
@@ -29,6 +30,13 @@ export const TransactionsProvider = ({ children }: ContextProps) => {
   const [currentAccount, setCurrentAccount] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [transactionCount, setTransactionCount] = useState(localStorage.getItem("transactionCount"));
+
+  const handleChange = (e, name) => {
+    setformData((prevState) => ({ ...prevState, [name]: e.target.value }));
+    console.log(formData);
+  };
+
+
 
   const checkIfWalletIsConnect = async () => {
     try {
@@ -64,15 +72,6 @@ export const TransactionsProvider = ({ children }: ContextProps) => {
         const { addressTo, amount, keyword, message } = formData;
         const transactionsContract = createEthereumContract();
         const parsedAmount = ethers.utils.parseEther(amount);
-
-        const accounts = await ethereum.request({ 
-          method: "eth_requestAccounts",  
-          params: [{
-            from: currentAccount,
-            to: addressTo,
-            gas: "0x5208",
-            value: parsedAmount._hex,
-        }],});
 
         await ethereum.request({
           method: "eth_sendTransaction",
@@ -114,7 +113,8 @@ export const TransactionsProvider = ({ children }: ContextProps) => {
     <TransactionContext.Provider
       value={{ 
         connectWallet,
-        sendTransaction
+        sendTransaction,
+        handleChange,
       }}
     >
       {children}
