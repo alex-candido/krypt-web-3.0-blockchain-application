@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import { useContext } from "react";
 import { AiFillPlayCircle } from "react-icons/ai";
 import { BsInfoCircle } from "react-icons/bs";
 import { SiEthereum } from "react-icons/si";
@@ -12,13 +12,17 @@ import Loader from "./Loader";
 const companyCommonStyles = "min-h-[70px] sm:px-0 px-2 sm:min-w-[120px] flex justify-center items-center border-[0.5px] border-gray-400 text-sm font-light text-white";
 
 const Welcome = () => {
-  const { currentAccount, connectWallet, sendTransaction, handleChange } = useContext(TransactionContext);
+  const { currentAccount, connectWallet, handleChange, sendTransaction, formData, isLoading } = useContext(TransactionContext);
 
-  const [isLoading, setisLoading] = React.useState(false);
+  const handleSubmit = (e: React.MouseEvent<HTMLElement>) => {
+    const { addressTo, amount, keyword, message } = formData;
 
-  function handleSubmit() {
-    
-  }
+    e.preventDefault();
+
+    if (!addressTo || !amount || !keyword || !message) return;
+
+    sendTransaction();
+  };
 
   return (
     <div className="flex w-full justify-center items-center">
@@ -89,7 +93,7 @@ const Welcome = () => {
               : (
                 <button
                   type="submit"
-                  onClick={sendTransaction}
+                  onClick={handleSubmit}
                   className="text-white w-full mt-2 border-[1px] p-2 border-[#3d4f7c] hover:bg-[#3d4f7c] rounded-full cursor-pointer"
                 >
                   Send now

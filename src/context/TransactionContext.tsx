@@ -1,29 +1,40 @@
 import { ethers } from "ethers";
-import React, { createContext, useEffect, useState } from "react";
+import React, { createContext, ReactNode, useEffect, useState } from "react";
 
 import { contractABI, contractAddress } from "../utils/constants";
-
-export interface Transaction {
-  addressTo: string;
-  addressFrom: string;
-  timestamp: string;
-  message: string;
-  keyword?: string;
-  amount: string;
-  url?: string;
-}
-
-interface AuthContextData {
-  connectWallet: () => void;
-  sendTransaction: () => void;
-  handleChange: (e: React.FormEvent<HTMLInputElement>, name: string) => void;
-  currentAccount: string;
-  transactions: Transaction[];
-}
 
 export const TransactionContext = createContext<AuthContextData>( {} as AuthContextData );
 
 const { ethereum } = window;
+
+const LOCAL_STORAGE_KEY = 'krypt:transactionCount';
+
+export interface Transaction {
+  addressTo: string;
+  addressFrom: string;
+  timestamp: ReactNode;
+  message: string;
+  keyword: string;
+  amount: string;
+  url: string;
+}
+
+interface FormDataProps {
+  addressTo: string; 
+  amount: string, 
+  keyword: string, 
+  message: string; 
+}
+
+interface AuthContextData {
+  connectWallet: () => void;
+  transactions: Transaction[];
+  currentAccount: string;
+  isLoading: boolean;
+  sendTransaction: () => void;
+  handleChange: (e: React.ChangeEvent<HTMLInputElement>, name: string) => void;
+  formData: FormDataProps;
+}
 
 interface ContextProps {
   children: React.ReactNode;
@@ -37,6 +48,8 @@ const createEthereumContract = () => {
   return transactionsContract;
 };
 
+console.log({createEthereumContract})
+
 export const TransactionsProvider = ({ children }: ContextProps) => {
   const [formData, setformData] = useState({ addressTo: "", amount: "", keyword: "", message: "" });
   const [currentAccount, setCurrentAccount] = useState("");
@@ -44,7 +57,7 @@ export const TransactionsProvider = ({ children }: ContextProps) => {
   const [transactionCount, setTransactionCount] = useState(localStorage.getItem("transactionCount"));
   const [transactions, setTransactions] = useState([]);
 
-  const handleChange = (e, name) => {
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>, name: string) => {
     setformData((prevState) => ({ ...prevState, [name]: e.target.value }));
     console.log(formData);
   };
@@ -62,7 +75,7 @@ export const TransactionsProvider = ({ children }: ContextProps) => {
           timestamp: new Date(transaction.timestamp.toNumber() * 1000).toLocaleString(),
           message: transaction.message,
           keyword: transaction.keyword,
-          amount: parseInt(transaction.amount._hex) / (10 ** 18)
+          amount: parseInt(transaction.amount._hex) / (10 ** 18),
         }));
 
         console.log(structuredTransactions);
@@ -75,7 +88,6 @@ export const TransactionsProvider = ({ children }: ContextProps) => {
       console.log(error);
     }
   };
-      
 
   const checkIfWalletIsConnect = async () => {
     try {
@@ -92,6 +104,24 @@ export const TransactionsProvider = ({ children }: ContextProps) => {
       }
     } catch (error) {
       console.log(error);
+    }
+  };
+
+  const checkIfTransactionsExists = async () => {
+    try {
+      if (ethereum) {
+        const transactionsContract = createEthereumContract();
+        const currentTransactionCount = await transactionsContract.getTransectionCount();
+
+        console.log(currentTransactionCount)
+
+        localStorage.setItem(LOCAL_STORAGE_KEY, currentTransactionCount);
+
+      }
+    } catch (error) {
+      console.log(error);
+
+      throw new Error("No ethereum object");
     }
   };
 
@@ -139,6 +169,7 @@ export const TransactionsProvider = ({ children }: ContextProps) => {
         const transactionsCount = await transactionsContract.getTransactionCount();
 
         setTransactionCount(transactionsCount.toNumber());
+        window.location.reload();
       } else {
         console.log("No ethereum object");
       }
@@ -151,17 +182,19 @@ export const TransactionsProvider = ({ children }: ContextProps) => {
 
   useEffect(() => {
     checkIfWalletIsConnect();
-    // checkIfTransactionsExists();
-  }, []);
+    checkIfTransactionsExists();
+  }, [transactionCount]);
 
   return (
     <TransactionContext.Provider
       value={{ 
         connectWallet,
+        transactions,
+        currentAccount,
+        isLoading,
         sendTransaction,
         handleChange,
-        currentAccount,
-        transactions,
+        formData,
       }}
     >
       {children}

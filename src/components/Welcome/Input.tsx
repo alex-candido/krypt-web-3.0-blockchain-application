@@ -3,7 +3,7 @@ interface InputProps {
   name: string;
   type: string;
   value?: string;
-  handleChange: (e: React.FormEvent<HTMLInputElement>, name: string) => void;
+  handleChange: (e: React.ChangeEvent<HTMLInputElement>, name: string) => void;
 }
 
 const Input = ({ placeholder, name, type, value, handleChange }: InputProps) => {

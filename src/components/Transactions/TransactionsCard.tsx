@@ -1,4 +1,5 @@
 import { Transaction } from "../../context/TransactionContext";
+import { GIPHY } from "../../env/variables";
 import useFetch from "../../hooks/useFetch";
 import { shortenAddress } from "../../utils/shortenAddress";
 
@@ -31,7 +32,7 @@ const TransactionsCard = ({ addressTo, addressFrom, timestamp, message, keyword,
           )}
         </div>
         <img
-          src={gifUrl || url}
+          src={(gifUrl || url) || GIPHY}
           alt="nature"
           className="w-full h-64 2xl:h-96 rounded-md shadow-lg object-cover"
         />
