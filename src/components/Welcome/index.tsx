@@ -1,8 +1,9 @@
-import React from "react";
+import { useContext } from "react";
 import { AiFillPlayCircle } from "react-icons/ai";
 import { BsInfoCircle } from "react-icons/bs";
 import { SiEthereum } from "react-icons/si";
-import shortenAddress from "../../utils/shortenAddress";
+import { TransactionContext } from "../../context/TransactionContext";
+import { shortenAddress } from "../../utils/shortenAddress";
 import GridItem from "./GridItem";
 import Input from "./Input";
 import { inputList } from "./InputList";
@@ -11,19 +12,17 @@ import Loader from "./Loader";
 const companyCommonStyles = "min-h-[70px] sm:px-0 px-2 sm:min-w-[120px] flex justify-center items-center border-[0.5px] border-gray-400 text-sm font-light text-white";
 
 const Welcome = () => {
-  const [isLoading, setisLoading] = React.useState(false);
+  const { currentAccount, connectWallet, handleChange, sendTransaction, formData, isLoading } = useContext(TransactionContext);
 
-  function handleSubmit() {
-    
-  }
+  const handleSubmit = (e: React.MouseEvent<HTMLElement>) => {
+    const { addressTo, amount, keyword, message } = formData;
 
-  function handleChange() {
+    e.preventDefault();
 
-  }
+    if (!addressTo || !amount || !keyword || !message) return;
 
-  function connectWallet() {
-    
-  }
+    sendTransaction();
+  };
 
   return (
     <div className="flex w-full justify-center items-center">
@@ -37,7 +36,7 @@ const Welcome = () => {
           </p>
 
           <button
-            type="button"
+            type="submit"
             onClick={connectWallet}
             className="flex flex-row justify-center items-center my-5 bg-[#2952e3] p-3 rounded-full cursor-pointer hover:bg-[#2546bd]"
           >
@@ -68,7 +67,7 @@ const Welcome = () => {
               </div>
               <div>
                 <p className="text-white font-light text-sm">
-                  {shortenAddress()}
+                  {shortenAddress({address: currentAccount})}
                 </p>
                 <p className="text-white font-semibold text-lg mt-1">
                   Ethereum
@@ -78,8 +77,9 @@ const Welcome = () => {
           </div>
 
           <div className="p-5 sm:w-96 w-full flex flex-col justify-start items-center blue-glassmorphism">
-            {inputList.map((input) => (
+            {inputList.map((input, index) => (
               <Input 
+              key={index}
               placeholder={input.placeholder} 
               name={input.name} type={input.type} 
               handleChange={handleChange} 
@@ -92,7 +92,7 @@ const Welcome = () => {
               ? <Loader />
               : (
                 <button
-                  type="button"
+                  type="submit"
                   onClick={handleSubmit}
                   className="text-white w-full mt-2 border-[1px] p-2 border-[#3d4f7c] hover:bg-[#3d4f7c] rounded-full cursor-pointer"
                 >

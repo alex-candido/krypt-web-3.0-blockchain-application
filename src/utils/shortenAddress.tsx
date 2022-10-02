@@ -1,8 +1,9 @@
-
-const shortenAddress = () => {
-  return (
-    <div>shortenAddress</div>
-  )
+interface AddressProps {
+  address: string;
 }
 
-export default shortenAddress
+export const shortenAddress = ({ address }: AddressProps) => {
+  return ( 
+    `${address.slice(0, 5)}...${address.slice(address.length - 4)}`
+  );
+}
