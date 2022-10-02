@@ -3,19 +3,20 @@
 # Krypt - Blockchain Application
 
 krypt é uma aplicação Web 3.0, onde permite a realização de transações através da rede blockchain. 
-Foi construído usando React, Typescript com Vite e os estilos com Tailwind.css, Além de contratos inteligente escrito em Solidity, usando Alchemy para o backend, foi construído sobre Ropsten Test Network para ethereum, usando MetaMask para autenticação e carteira, sendo capaz de enviar Ethereum de uma carteira para outra e transações mostradas usando gifs obtidos da API de gifs GIPHY. Projeto da JavaScript Mastery.
+Foi construído usando React, Typescript com Vite e os estilos com Tailwind.css, além de contratos inteligente escrito em Solidity, usando Alchemy para o backend, foi construído sobre Ropsten Test Network para ethereum, usando MetaMask para autenticação e carteira. Sendo capaz de enviar Ethereum de uma carteira para outra e transações mostradas usando gifs obtidos da API de gifs GIPHY. Um Projeto da JavaScript Mastery.
 
-Suas funcionalidade são, conectar um aplicativo React.js regular ao blockchain e emparelhá-lo com sua carteira Ethereum usando MetaMask. Criar contratos inteligentes na rede Ethereum usando a linguagem de programação Solidity. Realizar transações na rede ethereum, acesse [krypt](https://krypt-blockchain-application.netlify.app/).
+Suas funcionalidade são, conectar um aplicativo React.js regular ao blockchain e emparelhá-lo com sua carteira Ethereum usando MetaMask. Criar contratos inteligentes na rede Ethereum usando a linguagem de programação Solidity no repositório [Smart Contract](https://github.com/alex-candido/krypt-web-3.0-blockchain-application-smart-contract) e realizar transações na rede ethereum, acesse [krypt](https://krypt-blockchain-application.netlify.app/).
 
 ## 🚀 Abordagens
 
-- Metodologias Web 3.0, Blockchain
-- Tailwind
-- Componetização
+- Metodologias Web 3.0
 - Typescript
-- API do GIPHY
+- Componetização
+- Tailwind
 - Solidity
 - MetaMask
+- API do GIPHY
+- Ambiente Hardhat
 
 ## 📌 Foi utilizado
 
